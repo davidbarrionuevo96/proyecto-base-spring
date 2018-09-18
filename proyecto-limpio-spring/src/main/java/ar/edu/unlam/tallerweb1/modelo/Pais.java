@@ -12,7 +12,6 @@ public class Pais {
 	@ManyToOne
 	private Continente continente;
 	
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -20,8 +19,6 @@ public class Pais {
 	private Integer habitantes;
 	private String idioma;
 	private String capital;
-	
-	
 	
 	public String getNombre() {
 		return nombre;
