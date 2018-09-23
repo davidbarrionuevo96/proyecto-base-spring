@@ -1,5 +1,6 @@
 package ar.edu.unlam.tallerweb1.modelo;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,7 +14,7 @@ public class Ciudad {
 	@ManyToOne
 	private Pais pais;
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	private Ubicacion ubicacionGeografica;
 	
 	@Id

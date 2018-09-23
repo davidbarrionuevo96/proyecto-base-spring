@@ -10,8 +10,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.edu.unlam.tallerweb1.SpringTest;
+import ar.edu.unlam.tallerweb1.modelo.Ciudad;
 import ar.edu.unlam.tallerweb1.modelo.Continente;
 import ar.edu.unlam.tallerweb1.modelo.Pais;
+import ar.edu.unlam.tallerweb1.modelo.Ubicacion;
 
 public class testPais extends SpringTest{
 
@@ -105,5 +107,67 @@ public class testPais extends SpringTest{
 		assertThat(nvaLista.size()).isEqualTo(3);
 		
 	}
+	
+	/*@Test
+	@Transactional
+	@Rollback(true)
+	public void testQueBuscaCapitalesQueEstanAlNorteDelTropicoDeCancer(){
+		// Linea del Ecuador	<-- es latitud.
+		// Tropico de Cancer 23.5º
+		// Tropico de Capricornio -23.5º
+		
+		// Meridiano de Greenwich <-- es longitud.
+		
+		Ubicacion ubi1 = new Ubicacion();
+		ubi1.setLatitud(38.906324);
+		ubi1.setLongitud(-77.035714);
+		
+		Ubicacion ubi2 = new Ubicacion();
+		ubi2.setLatitud(45.421752);
+		ubi2.setLongitud(-75.698992);
+		
+		Ubicacion ubi3 = new Ubicacion();
+		ubi3.setLatitud(-34.603326);
+		ubi3.setLongitud(-58.381886);
+		
+		Ciudad ciu1 = new Ciudad();
+		ciu1.setNombre("Washington");
+		ciu1.setUbicacionGeografica(ubi1);
+		
+		Ciudad ciu2 = new Ciudad();
+		ciu2.setNombre("Ottawa");
+		ciu2.setUbicacionGeografica(ubi2);
+		
+		Ciudad ciu3 = new Ciudad();
+		ciu3.setNombre("Buenos Aires");
+		ciu3.setUbicacionGeografica(ubi3);
+
+		Pais pais1 = new Pais();
+		pais1.setNombre("Estados Unidos");
+		pais1.setCapital(ciu1);
+		
+		Pais pais2 = new Pais();
+		pais2.setNombre("Canada");
+		pais2.setCapital(ciu2);
+		
+		Pais pais3 = new Pais();
+		pais3.setNombre("Argentina");
+		pais3.setCapital(ciu3);
+		
+		getSession().save(pais1);
+		getSession().save(pais2);
+		getSession().save(pais3);
+		
+		// Dame todos los paises que tengan su Ciudad capital al norte del Tropico de cancer.
+		List<Pais> nvaLista = getSession().createCriteria(Pais.class)
+				.createAlias("pais", "paisjoin")
+				.createAlias("paisjoin", "capital")
+				.createAlias("capital", "ubicacion")
+				.add(Restrictions.gt("ubicacion", "23.5"))
+				.list();
+		
+		assertThat(nvaLista.size()).isEqualTo(2);
+
+	}*/
 	
 }
