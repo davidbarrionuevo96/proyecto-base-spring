@@ -4,14 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.edu.unlam.tallerweb1.SpringTest;
-import ar.edu.unlam.tallerweb1.modelo.Continente;
-import ar.edu.unlam.tallerweb1.modelo.Pais;
+import ar.edu.unlam.tallerweb1.modelo.*;
 
 public class testPais extends SpringTest{
 
@@ -104,6 +104,44 @@ public class testPais extends SpringTest{
 		
 		assertThat(nvaLista.size()).isEqualTo(3);
 		
+	}
+	@Test
+	@Transactional
+	@Rollback
+	public void TestQueBuscaCiudadesDelHemisferioSur() {
+
+		Ubicacion ubicacion1 = new Ubicacion();
+		ubicacion1.setLatitud((long) 4000.9);
+		ubicacion1.setLongitud((long) 215.3);
+		
+		Ciudad ciudad1 = new Ciudad();
+		ciudad1.setNombre("Bs As");
+		ciudad1.setUbicacionGeografica(ubicacion1);
+		
+		Ubicacion ubicacion2 = new Ubicacion();
+		ubicacion2.setLatitud((long) 45.4);
+		ubicacion2.setLongitud((long) 75.69);
+		
+		Ciudad ciudad2 = new Ciudad();
+		ciudad2.setNombre("Ottawa");//Capital de Canada
+		ciudad2.setUbicacionGeografica(ubicacion2);
+		
+
+		Session session = getSession();
+		session.save(ubicacion1);
+		session.save(ciudad1);
+		session.save(ubicacion2);
+		session.save(ciudad2);
+
+		List<Ciudad> ciudadesHemisferioSur = getSession()
+				.createCriteria(Ciudad.class)
+				.createAlias("ubicacionGeografica","ub")
+				.add(Restrictions.le("ub.latitud", (long)200.6))
+				//Restrictions.le es menor que o igual
+				.list();
+
+		assertThat(ciudadesHemisferioSur).isNotNull();
+		assertThat(ciudadesHemisferioSur.size()).isEqualTo(1);
 	}
 	
 }
