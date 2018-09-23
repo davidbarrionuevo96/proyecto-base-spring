@@ -4,16 +4,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.edu.unlam.tallerweb1.SpringTest;
+
 import ar.edu.unlam.tallerweb1.modelo.Ciudad;
 import ar.edu.unlam.tallerweb1.modelo.Continente;
 import ar.edu.unlam.tallerweb1.modelo.Pais;
 import ar.edu.unlam.tallerweb1.modelo.Ubicacion;
+
+import ar.edu.unlam.tallerweb1.modelo.*;
+
 
 public class testPais extends SpringTest{
 
@@ -108,7 +113,8 @@ public class testPais extends SpringTest{
 		
 	}
 	
-	/*@Test
+
+	@Test
 	@Transactional
 	@Rollback(true)
 	public void testQueBuscaCapitalesQueEstanAlNorteDelTropicoDeCancer(){
@@ -142,6 +148,7 @@ public class testPais extends SpringTest{
 		ciu3.setNombre("Buenos Aires");
 		ciu3.setUbicacionGeografica(ubi3);
 
+		
 		Pais pais1 = new Pais();
 		pais1.setNombre("Estados Unidos");
 		pais1.setCapital(ciu1);
@@ -160,14 +167,53 @@ public class testPais extends SpringTest{
 		
 		// Dame todos los paises que tengan su Ciudad capital al norte del Tropico de cancer.
 		List<Pais> nvaLista = getSession().createCriteria(Pais.class)
-				.createAlias("pais", "paisjoin")
-				.createAlias("paisjoin", "capital")
-				.createAlias("capital", "ubicacion")
-				.add(Restrictions.gt("ubicacion", "23.5"))
+				.createAlias("capital", "capitaljoin")
+				.createAlias("capitaljoin.ubicacionGeografica", "ubicacionGeograficajoin")
+				.add(Restrictions.gt("ubicacionGeograficajoin.latitud", 23.5))
 				.list();
 		
 		assertThat(nvaLista.size()).isEqualTo(2);
 
-	}*/
+	}
+
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void TestQueBuscaCiudadesDelHemisferioSur() {
+
+		Ubicacion ubicacion1 = new Ubicacion();
+		ubicacion1.setLatitud(4000.9);
+		ubicacion1.setLongitud(215.3);
+		
+		Ciudad ciudad1 = new Ciudad();
+		ciudad1.setNombre("Bs As");
+		ciudad1.setUbicacionGeografica(ubicacion1);
+		
+		Ubicacion ubicacion2 = new Ubicacion();
+		ubicacion2.setLatitud(45.4);
+		ubicacion2.setLongitud(75.69);
+		
+		Ciudad ciudad2 = new Ciudad();
+		ciudad2.setNombre("Ottawa");//Capital de Canada
+		ciudad2.setUbicacionGeografica(ubicacion2);
+		
+
+		Session session = getSession();
+		session.save(ubicacion1);
+		session.save(ciudad1);
+		session.save(ubicacion2);
+		session.save(ciudad2);
+
+		List<Ciudad> ciudadesHemisferioSur = getSession()
+				.createCriteria(Ciudad.class)
+				.createAlias("ubicacionGeografica","ub")
+				.add(Restrictions.le("ub.latitud", 200.6))
+				//Restrictions.le es menor que o igual
+				.list();
+
+		assertThat(ciudadesHemisferioSur).isNotNull();
+		assertThat(ciudadesHemisferioSur.size()).isEqualTo(1);
+	}
 	
 }
