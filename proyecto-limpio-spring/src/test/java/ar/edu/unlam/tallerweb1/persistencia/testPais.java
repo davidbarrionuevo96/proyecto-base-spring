@@ -183,8 +183,8 @@ public class testPais extends SpringTest{
 	public void TestQueBuscaCiudadesDelHemisferioSur() {
 
 		Ubicacion ubicacion1 = new Ubicacion();
-		ubicacion1.setLatitud(4000.9);
-		ubicacion1.setLongitud(215.3);
+		 ubicacion1.setLatitud(-34.603326);
+		 ubicacion1.setLongitud(-58.381886);
 		
 		Ciudad ciudad1 = new Ciudad();
 		ciudad1.setNombre("Bs As");
@@ -198,17 +198,15 @@ public class testPais extends SpringTest{
 		ciudad2.setNombre("Ottawa");//Capital de Canada
 		ciudad2.setUbicacionGeografica(ubicacion2);
 		
-
-		Session session = getSession();
-		session.save(ubicacion1);
-		session.save(ciudad1);
-		session.save(ubicacion2);
-		session.save(ciudad2);
+		getSession().save(ubicacion1);
+		getSession().save(ciudad1);
+		getSession().save(ubicacion2);
+		getSession().save(ciudad2);
 
 		List<Ciudad> ciudadesHemisferioSur = getSession()
 				.createCriteria(Ciudad.class)
 				.createAlias("ubicacionGeografica","ub")
-				.add(Restrictions.le("ub.latitud", 200.6))
+				.add(Restrictions.le("ub.latitud", 0.0))
 				//Restrictions.le es menor que o igual
 				.list();
 
