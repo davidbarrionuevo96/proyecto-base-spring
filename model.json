@@ -3227,7 +3227,7 @@
     "weightsManifest": [
         {
             "paths": [
-                "https://cdn.jsdelivr.net/gh/ibarrionuevo50/proyecto-base-spring/model.weights.bin"
+                "model.weights.bin"
             ],
             "weights": [
                 {
